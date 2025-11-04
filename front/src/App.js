@@ -5,11 +5,12 @@ import theme from './theme/theme';
 import { testarConexao } from './services/api';
 import Header from './components/Header/Header';
 import Lancamentos from './components/Lancamentos/Lancamentos';
+import Filtro from './components/Filtro/Filtro';
 import Historico from './components/Historico/Historico';
 import './App.css';
 
 function App() {
-  // Estados para controle de atualizações
+  // Estados para controle de atualizações e filtros
   const [atualizarHistorico, setAtualizarHistorico] = useState(0);
   const [filtros, setFiltros] = useState({});
 
@@ -40,6 +41,12 @@ function App() {
     // Pode ser usado para outras atualizações se necessário
   };
 
+  // Callback quando filtros mudarem
+  const handleFiltrosChange = (novosFiltros) => {
+    console.log('🔍 Filtros atualizados:', novosFiltros);
+    setFiltros(novosFiltros);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -66,16 +73,12 @@ function App() {
             
             {/* Box direito - Filtro + Histórico */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Filtro (Task 2.3) */}
-              <Box sx={{ 
-                p: 2, 
-                bgcolor: 'background.paper', 
-                borderRadius: 2,
-                boxShadow: 1
-              }}>
-                <h3>🔍 Filtros</h3>
-                <p>Componente será implementado na Task 2.3</p>
-                <small>Filtros atuais: {JSON.stringify(filtros)}</small>
+              {/* Filtro */}
+              <Box>
+                <Filtro 
+                  onFiltrosChange={handleFiltrosChange}
+                  filtrosAtivos={filtros}
+                />
               </Box>
               
               {/* Histórico */}
@@ -83,7 +86,7 @@ function App() {
                 <Historico 
                   filtros={filtros}
                   onLancamentoAtualizado={handleHistoricoAtualizado}
-                  key={atualizarHistorico} // Força re-render quando lançamento é criado
+                  key={`${atualizarHistorico}-${JSON.stringify(filtros)}`} // Re-render quando filtros ou lançamentos mudarem
                 />
               </Box>
             </Box>
