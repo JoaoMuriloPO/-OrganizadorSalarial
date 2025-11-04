@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
 const connectDatabase = require('./middleware/database');
 
 // Importar rotas
@@ -26,17 +25,15 @@ const limiter = rateLimit({
 // Middlewares
 app.use(limiter);
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*', // Permitir qualquer origem em produção
+  origin: [
+    'http://localhost:3000',
+    'https://organizadora-salarial.vercel.app',
+    'https://*.vercel.app'
+  ],
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Servir arquivos estáticos do React (PRODUÇÃO)
-if (process.env.NODE_ENV === 'production') {
-  // Servir arquivos estáticos do build do React
-  app.use(express.static(path.join(__dirname, '../front/build')));
-}
 
 // Rotas da API
 app.use('/api/lancamentos', lancamentosRoutes);
@@ -65,22 +62,15 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Servir React App para todas as outras rotas (PRODUÇÃO)
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../front/build', 'index.html'));
+// Rota raiz
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'API Organizadora Salarial',
+    version: '1.0.0',
+    api: '/api',
+    frontend: 'https://organizadora-salarial.vercel.app'
   });
-} else {
-  // Rota de teste para desenvolvimento
-  app.get('/', (req, res) => {
-    res.json({ 
-      message: 'Servidor Organizadora Salarial - Desenvolvimento',
-      version: '1.0.0',
-      api: '/api',
-      frontend: 'http://localhost:3000'
-    });
-  });
-}
+});
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
@@ -91,9 +81,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Middleware para rotas não encontradas da API
-app.use('/api/*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint da API não encontrado' });
+// Middleware para rotas não encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Rota não encontrada' });
 });
 
 app.listen(PORT, () => {
@@ -101,10 +91,6 @@ app.listen(PORT, () => {
   console.log(`📍 Acesse: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log(`🎨 Frontend: Servindo arquivos estáticos do React`);
-  }
 });
 
 module.exports = app;
