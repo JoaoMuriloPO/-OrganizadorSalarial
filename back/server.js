@@ -24,14 +24,21 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(limiter);
+
+// CORS configurado para aceitar Vercel
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://organizadora-salarial.vercel.app',
+    'https://organizadorsalarialdeploy.vercel.app',
+    'https://organizadorsalarialdeploy-git-main-joao-murilos-projects.vercel.app',
+    'https://organizadorsalarialdeploy-ds2dvp4pa-joao-murilos-projects.vercel.app',
     'https://*.vercel.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -68,7 +75,7 @@ app.get('/', (req, res) => {
     message: 'API Organizadora Salarial',
     version: '1.0.0',
     api: '/api',
-    frontend: 'https://organizadora-salarial.vercel.app'
+    frontend: 'https://organizadorsalarialdeploy.vercel.app'
   });
 });
 
@@ -91,6 +98,7 @@ app.listen(PORT, () => {
   console.log(`📍 Acesse: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 CORS configurado para Vercel`);
 });
 
 module.exports = app;
