@@ -4,6 +4,7 @@ import { CssBaseline, Container, Box } from '@mui/material';
 import theme from './theme/theme';
 import { testarConexao } from './services/api';
 import Header from './components/Header/Header';
+import Lancamentos from './components/Lancamentos/Lancamentos';
 import './App.css';
 
 function App() {
@@ -21,6 +22,13 @@ function App() {
     verificarAPI();
   }, []);
 
+  // Callback quando um lançamento for criado
+  const handleLancamentoCriado = (novoLancamento) => {
+    console.log('🎉 Novo lançamento criado:', novoLancamento);
+    // Aqui podemos atualizar lista de lançamentos, etc.
+    // Será implementado quando criarmos o componente Histórico
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -30,34 +38,19 @@ function App() {
         
         {/* Conteúdo Principal */}
         <Container maxWidth="xl" sx={{ py: 3 }}>
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <h2>Sistema de Gerenciamento Financeiro</h2>
-            <p>Frontend configurado e pronto para desenvolvimento!</p>
-            <p style={{ fontSize: '0.9em', color: '#666' }}>
-              Verifique o console para status da conexão com API.
-            </p>
-          </Box>
-          
-          {/* Placeholder para próximos componentes */}
+          {/* Layout Principal */}
           <Box sx={{ 
             display: 'grid', 
             gap: 3,
             gridTemplateColumns: { 
               xs: '1fr', 
-              md: '1fr 1fr' 
+              md: '400px 1fr' 
             },
-            mb: 3
+            alignItems: 'start'
           }}>
-            {/* Box esquerdo - Lançamentos (Task 2.2) */}
-            <Box sx={{ 
-              p: 3, 
-              bgcolor: 'background.paper', 
-              borderRadius: 2,
-              boxShadow: 1,
-              minHeight: 300
-            }}>
-              <h3>📝 Lançamentos</h3>
-              <p>Componente será implementado na Task 2.2</p>
+            {/* Box esquerdo - Lançamentos */}
+            <Box>
+              <Lancamentos onLancamentoCriado={handleLancamentoCriado} />
             </Box>
             
             {/* Box direito - Filtro + Histórico */}
