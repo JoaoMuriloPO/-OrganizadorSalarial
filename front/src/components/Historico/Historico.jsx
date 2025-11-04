@@ -45,7 +45,7 @@ const Historico = ({ filtros, onLancamentoAtualizado, onResumoAtualizado }) => {
   const [totalItens, setTotalItens] = useState(0);
   const [resumo, setResumo] = useState({ totalValor: 0, quantidadeItens: 0 });
 
-  // Carregar lançamentos - useCallback para evitar warning
+  // Carregar lançamentos - REMOVIDO onResumoAtualizado das dependências
   const carregarLancamentos = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -65,11 +65,6 @@ const Historico = ({ filtros, onLancamentoAtualizado, onResumoAtualizado }) => {
       const novoResumo = response.resumo || { totalValor: 0, quantidadeItens: 0 };
       setResumo(novoResumo);
 
-      // Notificar componente pai sobre o resumo atualizado
-      if (onResumoAtualizado) {
-        onResumoAtualizado(novoResumo);
-      }
-
       console.log('✅ Lançamentos carregados:', response);
 
     } catch (error) {
@@ -80,18 +75,22 @@ const Historico = ({ filtros, onLancamentoAtualizado, onResumoAtualizado }) => {
       // Resetar resumo em caso de erro
       const resumoVazio = { totalValor: 0, quantidadeItens: 0 };
       setResumo(resumoVazio);
-      if (onResumoAtualizado) {
-        onResumoAtualizado(resumoVazio);
-      }
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, filtros, onResumoAtualizado]);
+  }, [page, rowsPerPage, filtros]); // REMOVIDO onResumoAtualizado
 
   // Efeito para carregar dados
   useEffect(() => {
     carregarLancamentos();
   }, [carregarLancamentos]);
+
+  // Efeito separado para notificar mudanças no resumo
+  useEffect(() => {
+    if (onResumoAtualizado) {
+      onResumoAtualizado(resumo);
+    }
+  }, [resumo, onResumoAtualizado]);
 
   // Manipular mudança de página
   const handleChangePage = (event, newPage) => {
