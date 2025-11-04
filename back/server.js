@@ -34,14 +34,34 @@ app.use(express.urlencoded({ extended: true }));
 // Rotas
 app.use('/api/lancamentos', lancamentosRoutes);
 
-// Rota de teste
-app.get('/', (req, res) => {
+// Rota de teste da API
+app.get('/api', (req, res) => {
   res.json({ 
     message: 'API Organizadora Salarial funcionando!',
     version: '1.0.0',
+    status: 'online',
     endpoints: {
-      lancamentos: '/api/lancamentos'
+      lancamentos: '/api/lancamentos',
+      health: '/api/health'
     }
+  });
+});
+
+// Rota de health check
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Rota de teste raiz
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Servidor Organizadora Salarial',
+    version: '1.0.0',
+    api: '/api'
   });
 });
 
@@ -62,6 +82,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📍 Acesse: http://localhost:${PORT}`);
+  console.log(`🔗 API: http://localhost:${PORT}/api`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV}`);
 });
 
