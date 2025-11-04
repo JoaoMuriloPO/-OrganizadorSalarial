@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Container, Box } from '@mui/material';
 import theme from './theme/theme';
 import { testarConexao } from './services/api';
 import Header from './components/Header/Header';
 import Lancamentos from './components/Lancamentos/Lancamentos';
+import Historico from './components/Historico/Historico';
 import './App.css';
 
 function App() {
+  // Estados para controle de atualizações
+  const [atualizarHistorico, setAtualizarHistorico] = useState(0);
+  const [filtros, setFiltros] = useState({});
+
   // Testar conexão com API ao inicializar
   useEffect(() => {
     const verificarAPI = async () => {
@@ -25,8 +30,14 @@ function App() {
   // Callback quando um lançamento for criado
   const handleLancamentoCriado = (novoLancamento) => {
     console.log('🎉 Novo lançamento criado:', novoLancamento);
-    // Aqui podemos atualizar lista de lançamentos, etc.
-    // Será implementado quando criarmos o componente Histórico
+    // Forçar atualização do histórico
+    setAtualizarHistorico(prev => prev + 1);
+  };
+
+  // Callback quando histórico for atualizado (delete, edit)
+  const handleHistoricoAtualizado = () => {
+    console.log('🔄 Histórico atualizado');
+    // Pode ser usado para outras atualizações se necessário
   };
 
   return (
@@ -64,30 +75,16 @@ function App() {
               }}>
                 <h3>🔍 Filtros</h3>
                 <p>Componente será implementado na Task 2.3</p>
+                <small>Filtros atuais: {JSON.stringify(filtros)}</small>
               </Box>
               
-              {/* Histórico (Task 2.4) */}
-              <Box sx={{ 
-                p: 3, 
-                bgcolor: 'background.paper', 
-                borderRadius: 2,
-                boxShadow: 1,
-                flexGrow: 1
-              }}>
-                <h3>📊 Histórico</h3>
-                <p>Componente será implementado na Task 2.4</p>
-                
-                {/* Total do Mês (Task 2.5) */}
-                <Box sx={{ 
-                  mt: 2, 
-                  p: 2, 
-                  bgcolor: 'primary.light', 
-                  color: 'white',
-                  borderRadius: 1
-                }}>
-                  <h4>💰 Total do Mês</h4>
-                  <p>Componente será implementado na Task 2.5</p>
-                </Box>
+              {/* Histórico */}
+              <Box>
+                <Historico 
+                  filtros={filtros}
+                  onLancamentoAtualizado={handleHistoricoAtualizado}
+                  key={atualizarHistorico} // Força re-render quando lançamento é criado
+                />
               </Box>
             </Box>
           </Box>
