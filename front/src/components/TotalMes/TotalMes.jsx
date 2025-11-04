@@ -51,14 +51,6 @@ const TotalMes = ({ resumo, filtrosAtivos }) => {
     return (resumo.totalValor || 0) / resumo.quantidadeItens;
   };
 
-  // Obter cor baseada no valor
-  const obterCorValor = (valor) => {
-    if (valor === 0) return 'text.secondary';
-    if (valor < 100) return 'success.main';
-    if (valor < 500) return 'warning.main';
-    return 'error.main';
-  };
-
   // Obter ícone de tendência (simulado)
   const obterTendencia = () => {
     const valor = resumo?.totalValor || 0;
