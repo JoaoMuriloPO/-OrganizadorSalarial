@@ -1,30 +1,46 @@
 {
-  "name": "organizadora-salarial",
+  "name": "organizadora-salarial-frontend",
   "version": "1.0.0",
-  "description": "Sistema completo para gerenciamento de lançamentos financeiros",
-  "main": "back/server.js",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
+    "@mui/x-date-pickers": "^8.16.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.0.0",
+    "axios": "^1.13.1",
+    "date-fns": "^3.6.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
   "scripts": {
-    "start": "node back/server.js",
+    "start": "cd front && npm start",
     "build": "cd front && npm install && npm run build",
-    "install-deps": "cd back && npm install && cd ../front && npm install",
-    "dev:backend": "cd back && npm run dev",
-    "dev:frontend": "cd front && npm start",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "test": "cd front && npm test"
   },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "keywords": [
-    "react",
-    "nodejs",
-    "mongodb",
-    "financial",
-    "expense-tracker"
-  ],
-  "author": "Seu Nome",
-  "license": "MIT",
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
