@@ -30,7 +30,7 @@ import {
 import { lancamentosService } from '../../services/api';
 import { MENSAGENS } from '../../utils/constants';
 
-const Historico = ({ filtros, onLancamentoAtualizado }) => {
+const Historico = ({ filtros, onLancamentoAtualizado, onResumoAtualizado }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -61,7 +61,14 @@ const Historico = ({ filtros, onLancamentoAtualizado }) => {
       
       setLancamentos(response.lancamentos || []);
       setTotalItens(response.paginacao?.totalItens || 0);
-      setResumo(response.resumo || { totalValor: 0, quantidadeItens: 0 });
+      
+      const novoResumo = response.resumo || { totalValor: 0, quantidadeItens: 0 };
+      setResumo(novoResumo);
+
+      // Notificar componente pai sobre o resumo atualizado
+      if (onResumoAtualizado) {
+        onResumoAtualizado(novoResumo);
+      }
 
       console.log('✅ Lançamentos carregados:', response);
 
@@ -69,10 +76,17 @@ const Historico = ({ filtros, onLancamentoAtualizado }) => {
       console.error('❌ Erro ao carregar lançamentos:', error);
       setError(error.message || MENSAGENS.ERRO.ERRO_GENERICO);
       setLancamentos([]);
+      
+      // Resetar resumo em caso de erro
+      const resumoVazio = { totalValor: 0, quantidadeItens: 0 };
+      setResumo(resumoVazio);
+      if (onResumoAtualizado) {
+        onResumoAtualizado(resumoVazio);
+      }
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, filtros]);
+  }, [page, rowsPerPage, filtros, onResumoAtualizado]);
 
   // Efeito para carregar dados
   useEffect(() => {
@@ -184,18 +198,13 @@ const Historico = ({ filtros, onLancamentoAtualizado }) => {
           </Tooltip>
         </Box>
 
-        {/* Resumo */}
+        {/* Resumo Rápido */}
         <Box sx={{ 
           display: 'flex', 
           gap: 2, 
           mb: 2,
           flexWrap: 'wrap'
         }}>
-          <Chip 
-            label={`Total: ${formatarValor(resumo.totalValor)}`}
-            color="primary"
-            variant="outlined"
-          />
           <Chip 
             label={`${resumo.quantidadeItens} lançamento(s)`}
             color="secondary"

@@ -7,12 +7,14 @@ import Header from './components/Header/Header';
 import Lancamentos from './components/Lancamentos/Lancamentos';
 import Filtro from './components/Filtro/Filtro';
 import Historico from './components/Historico/Historico';
+import TotalMes from './components/TotalMes/TotalMes';
 import './App.css';
 
 function App() {
   // Estados para controle de atualizações e filtros
   const [atualizarHistorico, setAtualizarHistorico] = useState(0);
   const [filtros, setFiltros] = useState({});
+  const [resumoAtual, setResumoAtual] = useState({ totalValor: 0, quantidadeItens: 0 });
 
   // Testar conexão com API ao inicializar
   useEffect(() => {
@@ -47,6 +49,12 @@ function App() {
     setFiltros(novosFiltros);
   };
 
+  // Callback quando resumo do histórico for atualizado
+  const handleResumoAtualizado = (novoResumo) => {
+    console.log('📊 Resumo atualizado:', novoResumo);
+    setResumoAtual(novoResumo);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -71,7 +79,7 @@ function App() {
               <Lancamentos onLancamentoCriado={handleLancamentoCriado} />
             </Box>
             
-            {/* Box direito - Filtro + Histórico */}
+            {/* Box direito - Filtro + Histórico + Total */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {/* Filtro */}
               <Box>
@@ -81,11 +89,20 @@ function App() {
                 />
               </Box>
               
+              {/* Total do Mês */}
+              <Box>
+                <TotalMes 
+                  resumo={resumoAtual}
+                  filtrosAtivos={filtros}
+                />
+              </Box>
+              
               {/* Histórico */}
               <Box>
                 <Historico 
                   filtros={filtros}
                   onLancamentoAtualizado={handleHistoricoAtualizado}
+                  onResumoAtualizado={handleResumoAtualizado}
                   key={`${atualizarHistorico}-${JSON.stringify(filtros)}`} // Re-render quando filtros ou lançamentos mudarem
                 />
               </Box>
