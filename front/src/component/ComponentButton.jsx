@@ -1,4 +1,12 @@
-const Button = document.createElement('button');
-button.textContent = 'Click Me';
-button.style.padding = '10px 20px';
-export default Button;
+import React from "react";
+import { Button } from "@mui/material";
+
+const ComponentButton = () => {
+  return (
+    <Button variant="contained" color="primary">
+      Click Me
+    </Button>
+  );
+};
+
+export default ComponentButton;
