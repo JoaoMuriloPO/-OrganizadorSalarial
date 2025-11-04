@@ -1,0 +1,30 @@
+{
+  "name": "organizadora-salarial",
+  "version": "1.0.0",
+  "description": "Sistema completo para gerenciamento de lançamentos financeiros",
+  "main": "back/server.js",
+  "scripts": {
+    "start": "node back/server.js",
+    "build": "cd front && npm install && npm run build",
+    "install-deps": "cd back && npm install && cd ../front && npm install",
+    "dev:backend": "cd back && npm run dev",
+    "dev:frontend": "cd front && npm start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "react",
+    "nodejs",
+    "mongodb",
+    "financial",
+    "expense-tracker"
+  ],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
