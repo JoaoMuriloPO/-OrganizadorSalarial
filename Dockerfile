@@ -1,32 +1,31 @@
-# Use Node.js 18 como base
+# Use Node.js 18 LTS
 FROM node:18-alpine
 
-# Definir diretório de trabalho
+# Criar diretório de trabalho
 WORKDIR /app
 
-# Copiar package.json do backend
-COPY back/package*.json ./back/
+# Copiar arquivos de dependências primeiro (cache layer)
+COPY back/package*.json ./
+COPY front/package*.json ./front/
 
 # Instalar dependências do backend
-RUN cd back && npm install
-
-# Copiar package.json do frontend
-COPY front/package*.json ./front/
+RUN npm install
 
 # Instalar dependências do frontend
 RUN cd front && npm install
 
-# Copiar todo o código
-COPY . .
+# Copiar código fonte
+COPY back/ ./
+COPY front/ ./front/
 
-# Build do frontend
+# Build do React
 RUN cd front && npm run build
 
 # Expor porta
 EXPOSE 3001
 
-# Definir variável de ambiente
+# Variável de ambiente
 ENV NODE_ENV=production
 
-# Comando para iniciar o servidor
-CMD ["node", "back/server.js"]
+# Comando de start
+CMD ["npm", "start"]
