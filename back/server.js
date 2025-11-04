@@ -27,36 +27,24 @@ app.use(limiter);
 
 // CORS configurado para aceitar TODAS as URLs do Vercel
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir requisições sem origin (mobile apps, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Permitir localhost para desenvolvimento
-    if (origin.includes('localhost')) return callback(null, true);
-    
-    // Permitir qualquer subdomínio do Vercel
-    if (origin.includes('vercel.app')) return callback(null, true);
-    
-    // Permitir origins específicos
-    const allowedOrigins = [
-      'https://organizadorsalarialdeploy.vercel.app',
-      'https://organizadorsalarialdeploy-git-main-joao-murilos-projects.vercel.app',
-      'https://organizadorsalarialdeploy-ds2dvp4pa-joao-murilos-projects.vercel.app',
-      'https://organizadorsalarialdeploy-joao-murilos-projects.vercel.app'
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    callback(new Error('Not allowed by CORS'));
-  },
+  origin: [
+    'http://localhost:3000',
+    // URLs principais do Vercel
+    'https://organizadorsalarialdeploy.vercel.app',
+    'https://organizadorsalarialdeploy-git-main-joao-murilos-projects.vercel.app',
+    'https://organizadorsalarialdeploy-ds2dvp4pa-joao-murilos-projects.vercel.app',
+    // Padrões do Vercel
+    'https://organizadorsalarialdeploy-joao-murilos-projects.vercel.app',
+    'https://*.vercel.app'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 200
 }));
+
+// Middleware adicional para preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -85,7 +73,8 @@ app.get('/api/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    cors: 'OK'
   });
 });
 
@@ -96,7 +85,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     api: '/api',
     frontend: 'https://organizadorsalarialdeploy.vercel.app',
-    cors: 'Configurado para aceitar Vercel'
+    cors: 'Configurado para múltiplas URLs do Vercel'
   });
 });
 
@@ -119,7 +108,7 @@ app.listen(PORT, () => {
   console.log(`📍 Acesse: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 CORS configurado para aceitar qualquer *.vercel.app`);
+  console.log(`🌐 CORS configurado para TODAS as URLs do Vercel`);
 });
 
 module.exports = app;
