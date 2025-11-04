@@ -1,0 +1,28 @@
+/* Estilos adicionais para o Header se necessário */
+
+/* Animação suave para o header */
+.header-container {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Efeito hover no título (opcional) */
+.header-title:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Responsividade adicional se necessário */
+@media (max-width: 600px) {
+  .header-mobile {
+    padding: 8px 16px;
+  }
+}
+
+/* Gradiente personalizado para diferentes temas (futuro) */
+.header-gradient-primary {
+  background: linear-gradient(45deg, #1976d2 30%, #42a5f5 90%);
+}
+
+.header-gradient-secondary {
+  background: linear-gradient(45deg, #dc004e 30%, #ff5983 90%);
+}
