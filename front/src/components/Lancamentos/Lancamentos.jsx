@@ -18,7 +18,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ptBR } from 'date-fns/locale';
+import { ptBR } from 'date-fns/locale/pt-BR'; // CORRIGIDO: caminho específico
 import { Add, AttachMoney } from '@mui/icons-material';
 import { CATEGORIAS, MENSAGENS } from '../../utils/constants';
 import { lancamentosService } from '../../services/api';
